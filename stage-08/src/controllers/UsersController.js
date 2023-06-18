@@ -3,14 +3,6 @@ const sqliteConnection = require("../database/sqlite")
 const { hash, compare } = require("bcrypt")
 
 class UsersController {
-  /**
-   * index - GET para listar vários registros
-   * show - GET para exibir um registro específico
-   * create - POST para criar um registro
-   * update - PUT para atualizar um registro
-   * delete - DELETE para excluir um registro
-   */
-
   async create(req, res) {
     const { name, email, password } = req.body
 
@@ -29,11 +21,11 @@ class UsersController {
   }
 
   async update(req, res) {
-    const { id } = req.params
+    const { id: user_id } = req.user
     const { name, email, newPassword, oldPassword } = req.body
 
     const database = await sqliteConnection()
-    const user = await database.get("SELECT * FROM users WHERE id = ?", [id])
+    const user = await database.get("SELECT * FROM users WHERE id = ?", [user_id])
 
     if (!user) {
       throw new AppError("User not found")
@@ -70,7 +62,7 @@ class UsersController {
         updated_at = DATETIME('now')
       WHERE
         id = ?
-    `, [user.name, user.email, user.password, id])
+    `, [user.name, user.email, user.password, user_id])
 
     return res.sendStatus(200)
   }
