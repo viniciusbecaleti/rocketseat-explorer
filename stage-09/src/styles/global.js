@@ -19,7 +19,7 @@ export default createGlobalStyle`
   }
 
   a {
-    text-align: none;
+    text-decoration: none;
   }
 
   a, button {
