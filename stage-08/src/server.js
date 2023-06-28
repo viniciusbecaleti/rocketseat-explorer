@@ -3,12 +3,14 @@ const express = require("express")
 const routes = require("./routes")
 const AppError = require("./utils/AppError")
 const migrationsRun = require("./database/sqlite/migrations")
+const uploadConfig = require("./configs/upload")
 
 const app = express()
 migrationsRun()
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER))
 app.use(routes)
 app.use((error, req, res, next) => {
   if (error instanceof AppError) {
